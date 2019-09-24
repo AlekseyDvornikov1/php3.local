@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<project name="Phing Deploy Demo" basedir="." default="production">
+    <target name="copy">
+        <php returnProperty="build.date" function="date">
+            <param value="Y-m-d-H-i-s"/>
+        </php>
+        <resolvepath propertyName="target.dir" path="C:\ser\OSPanel\domains\php3.local\${build.date}"/>
+        <mkdir dir="${target.dir}"/>
+        <property name="domain" value="test.com"/>
+        <copy todir="${target.dir}">
+            <fileset dir="${project.basedir}">
+                <include name="**" />
+            </fileset>
+        </copy>
+        <copy file="C:\ser\OSPanel\temp\php3.local\config\server.php" tofile="${target.dir}\config\server.php" overwrite="true">
+            <filterchain>
+                <replacetokens begintoken="{{" endtoken="}}">
+                    <token key="domain" value="${domain}" />
+                </replacetokens>
+            </filterchain>
+        </copy>
+
+        <copy file="C:\ser\OSPanel\temp\php3.local\.env.example" tofile="${target.dir}\.env" overwrite="true">
+        </copy>
+
+        <exec dir="${target.dir}" executable="mklink">
+            <arg value="/j"/>
+            <arg value="C:\ser\OSPanel\domains\php3.local\current"/>
+            <arg value="${target.dir}"/>
+        </exec>
+
+        <exec dir="${target.dir}" executable="php">
+            <arg value="artisan"/>
+            <arg value="key:generate"/>
+        </exec>
+
+    </target>
+
+    <target name="composer">
+        <exec dir="${target.dir}" executable="composer">
+            <arg value="install"/>
+        </exec>
+    </target>
+
+    <target name="production" depends="copy, composer">
+        <echo msg="DONE!"/>
+    </target>
+</project>
