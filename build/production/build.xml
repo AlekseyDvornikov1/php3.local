@@ -29,11 +29,6 @@
             <arg value="${target.dir}"/>
         </exec>
 
-        <exec dir="${target.dir}" executable="php">
-            <arg value="artisan"/>
-            <arg value="key:generate"/>
-        </exec>
-
     </target>
 
     <target name="composer">
@@ -42,7 +37,14 @@
         </exec>
     </target>
 
-    <target name="production" depends="copy, composer">
+    <target name="key">
+        <exec dir="${target.dir}" executable="php">
+            <arg value="artisan"/>
+            <arg value="key:generate"/>
+        </exec>
+    </target>
+
+    <target name="production" depends="copy, composer, key">
         <echo msg="DONE!"/>
     </target>
 </project>
