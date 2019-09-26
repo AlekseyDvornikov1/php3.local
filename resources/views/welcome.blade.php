@@ -81,7 +81,7 @@
 
             <div class="content">
                 <div class="title m-b-md">
-                    Welcome to @php echo config()->get('server')['domain']; @endphp
+                    Welcome
                 </div>
 
             </div>

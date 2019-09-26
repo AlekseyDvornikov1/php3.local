@@ -12,18 +12,19 @@
                 <include name="**" />
             </fileset>
         </copy>
-        <copy file="C:\ser\OSPanel\temp\php3.local\config\server.php" tofile="${target.dir}\config\server.php" overwrite="true">
+
+
+        <copy file="C:\ser\OSPanel\temp\php3.local\build\production\.env.example" tofile="${target.dir}\.env" overwrite="true">
             <filterchain>
                 <replacetokens begintoken="{{" endtoken="}}">
-                    <token key="domain" value="${domain}" />
+                    <token key="db.name" value="${db.name}" />
+                    <token key="db.username" value="${db.username}" />
+                    <token key="db.password" value="${db.password}" />
                 </replacetokens>
             </filterchain>
         </copy>
 
-        <copy file="C:\ser\OSPanel\temp\php3.local\.env.example" tofile="${target.dir}\.env" overwrite="true">
-        </copy>
-
-        <exec dir="${target.dir}" executable="mklink">
+        <exec dir="${target.dir}" executable="mklink" passthru="true" checkreturn="true">
             <arg value="/j"/>
             <arg value="C:\ser\OSPanel\domains\php3.local\current"/>
             <arg value="${target.dir}"/>
@@ -32,19 +33,27 @@
     </target>
 
     <target name="composer">
-        <exec dir="${target.dir}" executable="composer">
+        <exec dir="${target.dir}" executable="composer" passthru="true" checkreturn="true">
             <arg value="install"/>
         </exec>
     </target>
 
+    <target name="migration">
+        <exec dir="${target.dir}" executable="php" passthru="true" checkreturn="true">
+            <arg value="artisan"/>
+            <arg value="migrate"/>
+            <arg value="--seed"/>
+        </exec>
+    </target>
+
     <target name="key">
-        <exec dir="${target.dir}" executable="php">
+        <exec dir="${target.dir}" executable="php" passthru="true" checkreturn="true">
             <arg value="artisan"/>
             <arg value="key:generate"/>
         </exec>
     </target>
 
-    <target name="production" depends="copy, composer, key">
+    <target name="production" depends="copy, composer, migration, key">
         <echo msg="DONE!"/>
     </target>
 </project>
