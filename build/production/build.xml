@@ -4,9 +4,9 @@
         <php returnProperty="build.date" function="date">
             <param value="Y-m-d-H-i-s"/>
         </php>
-        <resolvepath propertyName="target.dir" path="C:\ser\OSPanel\domains\php3.local\${build.date}"/>
+        <resolvepath propertyName="target.dir" path="/var/www/html/${build.date}"/>
         <mkdir dir="${target.dir}"/>
-        <property name="domain" value="test.com"/>
+
         <copy todir="${target.dir}">
             <fileset dir="${project.basedir}">
                 <include name="**" />
@@ -14,7 +14,7 @@
         </copy>
 
 
-        <copy file="C:\ser\OSPanel\temp\php3.local\build\production\.env.example" tofile="${target.dir}\.env" overwrite="true">
+        <copy file="/temp/php3.local/.env.example" tofile="${target.dir}/.env" overwrite="true">
             <filterchain>
                 <replacetokens begintoken="{{" endtoken="}}">
                     <token key="db.name" value="${db.name}" />
@@ -24,9 +24,16 @@
             </filterchain>
         </copy>
 
-        <exec dir="${target.dir}" executable="mklink" passthru="true" checkreturn="true">
-            <arg value="/j"/>
-            <arg value="C:\ser\OSPanel\domains\php3.local\current"/>
+        <exec dir="${target.dir}/.." executable="sudo" passthru="true" checkreturn="true">
+            <arg value="rm"/>
+            <arg value="-rf"/>
+            <arg value="current"/>
+        </exec>
+
+        <exec dir="${target.dir}" executable="sudo" passthru="true" checkreturn="true">
+            <arg value="ln"/>
+            <arg value="-s"/>
+            <arg value="/var/www/html/"/>
             <arg value="${target.dir}"/>
         </exec>
 
@@ -41,7 +48,7 @@
     <target name="migration">
         <exec dir="${target.dir}" executable="php" passthru="true" checkreturn="true">
             <arg value="artisan"/>
-            <arg value="migrate"/>
+            <arg value="migrate:fresh"/>
             <arg value="--seed"/>
         </exec>
     </target>
@@ -53,7 +60,14 @@
         </exec>
     </target>
 
-    <target name="production" depends="copy, composer, migration, key">
+    <target name="tests">
+        <exec dir="${target.dir}" executable="php" passthru="true" checkreturn="true">
+            <arg value="./vendor/phpunit/phpunit/phpunit"/>
+            <arg value="${target.dir}/tests"/>
+        </exec>
+    </target>
+
+    <target name="production" depends="copy, composer, migration, key, tests">
         <echo msg="DONE!"/>
     </target>
 </project>
