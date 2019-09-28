@@ -14,7 +14,7 @@
         </copy>
 
 
-        <copy file="/tmp/php3.local/.env.example" tofile="${target.dir}/.env" overwrite="true">
+        <copy file="/tmp/php3.local/build/.env.example" tofile="${target.dir}/.env" overwrite="true">
             <filterchain>
                 <replacetokens begintoken="{{" endtoken="}}">
                     <token key="db.name" value="${db.name}" />
