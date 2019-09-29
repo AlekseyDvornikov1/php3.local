@@ -24,7 +24,7 @@
             </filterchain>
         </copy>
 
-        <exec dir="${target.dir}/.." executable="sudo" passthru="true" checkreturn="true">
+        <exec dir="/var/www/html/" executable="sudo" passthru="true" checkreturn="true">
             <arg value="rm"/>
             <arg value="-rf"/>
             <arg value="current"/>
@@ -33,8 +33,8 @@
         <exec dir="${target.dir}" executable="sudo" passthru="true" checkreturn="true">
             <arg value="ln"/>
             <arg value="-s"/>
-            <arg value="/var/www/html/"/>
             <arg value="${target.dir}"/>
+            <arg value="/var/www/html/current"/>
         </exec>
 
     </target>
