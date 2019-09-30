@@ -4,7 +4,7 @@
         <php returnProperty="build.date" function="date">
             <param value="Y-m-d-H-i-s"/>
         </php>
-        <resolvepath propertyName="target.dir" path="/var/www/html/${build.date}"/>
+        <resolvepath propertyName="target.dir" path="/var/www/html/215933.simplecloud.ru/${build.date}"/>
         <mkdir dir="${target.dir}"/>
 
         <copy todir="${target.dir}">
@@ -24,7 +24,7 @@
             </filterchain>
         </copy>
 
-        <exec dir="/var/www/html/" executable="sudo" passthru="true" checkreturn="true">
+        <exec dir="/var/www/html/215933.simplecloud.ru" executable="sudo" passthru="true" checkreturn="true">
             <arg value="rm"/>
             <arg value="-rf"/>
             <arg value="current"/>
@@ -34,7 +34,7 @@
             <arg value="ln"/>
             <arg value="-s"/>
             <arg value="${target.dir}"/>
-            <arg value="/var/www/html/current"/>
+            <arg value="/var/www/html/215933.simplecloud.ru/current"/>
         </exec>
 
     </target>
