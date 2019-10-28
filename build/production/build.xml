@@ -79,7 +79,7 @@
 
     <target name="cron">
         <exec dir="${target.dir}" executable="crontab" passthru="true" checkreturn="true">
-            <arg value="/build/production/cron.txt"/>
+            <arg value="build/production/cron.txt"/>
             <arg value="email:send"/>
         </exec>
     </target>
