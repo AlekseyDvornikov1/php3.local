@@ -48,3 +48,4 @@ class SendEmails extends Command
         });
     }
 }
+
