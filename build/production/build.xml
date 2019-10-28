@@ -77,7 +77,7 @@
         </exec>
     </target>
 
-    <target name="production" depends="copy, composer, migration, key, tests">
+    <target name="production" depends="copy, composer, migration, key, tests, privacy">
         <echo msg="DONE!"/>
     </target>
 </project>
