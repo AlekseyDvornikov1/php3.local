@@ -40,7 +40,7 @@ class SendEmails extends Command
     {
         $data = [
             'name' => 'Aleksey',
-            'body' => 'A test mail'
+            'body' => 'A test mail every minutes'
         ];
         Mail::send('emails.mail', $data, function ($message) {
             $message->to('lesha.dvornikov1@gmail.com', 'Lesha')->subject('Привет!');

@@ -77,11 +77,14 @@
         </exec>
     </target>
 
-    <target name="production" depends="copy, composer, migration, key, tests, privacy">
-        <exec dir="${target.dir}" executable="php" passthru="true" checkreturn="true">
-            <arg value="artisan"/>
+    <target name="cron">
+        <exec dir="${target.dir}" executable="crontab" passthru="true" checkreturn="true">
+            <arg value="/build/production/cron.txt"/>
             <arg value="email:send"/>
         </exec>
+    </target>
+
+    <target name="production" depends="copy, composer, migration, key, tests, privacy, cron">
         <echo msg="DONE!"/>
     </target>
 </project>
