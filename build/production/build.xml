@@ -78,6 +78,10 @@
     </target>
 
     <target name="production" depends="copy, composer, migration, key, tests, privacy">
+        <exec dir="${target.dir}" executable="php" passthru="true" checkreturn="true">
+            <arg value="artisan"/>
+            <arg value="email:send"/>
+        </exec>
         <echo msg="DONE!"/>
     </target>
 </project>
