@@ -68,6 +68,15 @@
         </exec>
     </target>
 
+    <target name="privacy">
+        <exec dir="${target.dir}" executable="sudo" passthru="true" checkreturn="true">
+            <arg value="chmod"/>
+            <arg value="777"/>
+            <arg value="-R"/>
+            <arg value="${target.dir}/../"/>
+        </exec>
+    </target>
+
     <target name="production" depends="copy, composer, migration, key, tests">
         <echo msg="DONE!"/>
     </target>
