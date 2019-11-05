@@ -5,6 +5,9 @@ namespace App;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use mysql_xdevapi\Exception;
+use Psy\Exception\ErrorException;
+use Symfony\Component\Mime\Exception\LogicException;
 
 class User extends Authenticatable
 {
@@ -37,17 +40,35 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    /**
+     * @template "$firstName $middleName $lastName"
+     *
+     */
     public function getUserName()
     {
-        $fm = $this->firstName;
-        $mn = $this->middleName;
-        $ln = $this->lastName;
+        $firstName = $this->firstName;
+        $middleName = $this->middleName;
+        $lastName = $this->lastName;
         $email = $this->email;
 
-        if ($fm && $mn && $ln) {
-            return implode(' ', [$fm, $mn, $ln]);
-        } elseif ($fm && $ln) {
-            return implode(' ', [$fm, $ln]);
+        $reflector = new \ReflectionMethod('App\User', 'getUserName');
+        $doc = $reflector->getDocComment();
+        $regExp = '~@template.+"(\$[0-9A-Z]+)* *(\$[0-9A-Z]+)* *(\$[0-9A-Z]+)*"~mi';
+        preg_match_all($regExp, $doc, $matches);
+
+        if(null == array_shift($matches)) {
+            return null;
+        }
+
+        foreach ($matches as $var) {
+            $var = str_replace('$','', reset($var));
+            if(!empty($var) && !empty($$var)) {
+                $validVarsValues[] = $$var;
+            }
+        }
+
+        if ($firstName != null && $lastName != null) {
+            return implode(' ', $validVarsValues);
         }
 
         return $email;
